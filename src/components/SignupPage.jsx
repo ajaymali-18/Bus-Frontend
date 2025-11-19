@@ -1,5 +1,5 @@
-// import React from "react";
 import React, { useState } from "react";
+import axios from "axios";
 
 import "./SignupPage.css";
 import SignupGirl from "../assets/SignUpGirl.png";
@@ -7,8 +7,32 @@ import SignupGirl from "../assets/SignUpGirl.png";
 export default function SignupPage() {
 
     const [showPassword, setShowPassword] = useState(false);
-    return (
 
+    // Added states for inputs
+    const [fullName, setFullName] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+
+    // Signup function
+    const handleSignup = async () => {
+        try {
+            const response = await axios.post(
+                "http://localhost:8080/api/auth/signup",
+                {
+                    name: fullName,
+                    email: email,
+                    password: password
+                }
+            );
+
+            alert(response.data);
+        } catch (error) {
+            alert("Something went wrong");
+            console.error(error);
+        }
+    };
+
+    return (
         <div className="signup-container">
 
             {/* LEFT SIDE */}
@@ -45,20 +69,31 @@ export default function SignupPage() {
                     <div className="divider"><span></span> or <span></span></div>
 
                     {/* Inputs */}
-                    <input type="text" placeholder="Full Name" className="input" />
-                    <input type="email" placeholder="Email Address" className="input" />
-                    {/* <input type="password" placeholder="Password" className="input" /> */}
+                    <input
+                        type="text"
+                        placeholder="Full Name"
+                        className="input"
+                        onChange={(e) => setFullName(e.target.value)}
+                    />
+
+                    <input
+                        type="email"
+                        placeholder="Email Address"
+                        className="input"
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+
                     <div className="password-wrapper">
                         <input
                             type={showPassword ? "text" : "password"}
                             placeholder="Password"
                             className="input"
+                            onChange={(e) => setPassword(e.target.value)}
                         />
                         <span className="eye-icon" onClick={() => setShowPassword(!showPassword)}>
                             {showPassword ? "🙈" : "👁️"}
                         </span>
                     </div>
-
 
                     {/* Checkbox */}
                     <div className="check-row">
@@ -68,9 +103,10 @@ export default function SignupPage() {
                         </label>
                     </div>
 
-                    {/* Button */}
-                    <button className="signup-btn">Sign Up</button>
-
+                    {/* Signup Button (updated) */}
+                    <button className="signup-btn" onClick={handleSignup}>
+                        Sign Up
+                    </button>
 
                     <p className="login-text">
                         Already have an account? <a href="#">Sign in</a>
