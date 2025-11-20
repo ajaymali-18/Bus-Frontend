@@ -172,3 +172,25 @@
     margin-top: -10px;
     margin-bottom: 10px;
 }
+
+/* Cross Button Css */
+.form-box {
+    position: relative;
+    
+}
+
+.close-btn {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    font-size: 22px;
+    cursor: pointer;
+    color: gray;
+    padding: 5px;
+    transition: 0.2s;
+}
+
+.close-btn:hover {
+    color: black;
+    transform: scale(1.1);
+}

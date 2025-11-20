@@ -74,22 +74,32 @@ export default function SignupPage() {
     };
 
     return (
+
         <div className="signup-container">
+
 
             {/* LEFT SIDE */}
             <div className="left-side">
                 <div>
-                    <h1>Learn From World’s<br />Best Instructors<br />Around The World.</h1>
-                    <p>Study Online, Learn Online</p>
+                    <h1 style={{ color: "black" }}>Looks like you're new here!</h1>
+                    <h4 >
+                        <i>Sign up with your Name & Email to get started </i></h4>
+
+
+
                 </div>
                 <img src={SignupGirl} alt="signup girl" className="left-img" />
             </div>
 
             {/* RIGHT SIDE */}
             <div className="right-side">
-                <div className="form-box">
 
-                    <div className="lang">English (USA) ▾</div>
+                <div className="form-box">
+                    <div className="close-btn" onClick={() => window.location.href = "/"}>
+                        ✖
+                    </div>
+
+                    {/* <div className="lang">English (USA) ▾</div> */}
 
                     <h2>Create Account</h2>
 
