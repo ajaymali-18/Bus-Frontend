@@ -1,28 +1,13 @@
 import React, { useState } from "react";
 import "./SignupPage.css";
 import SignupGirl from "../assets/SignUpGirl.png";
+import { useAuth0 } from "@auth0/auth0-react";
 
 export default function LoginOTPPage() {
-    const [phone, setPhone] = useState("");
-    const [otpSent, setOtpSent] = useState(false);
-    const [otp, setOtp] = useState("");
-
-    const sendOtp = () => {
-        if (phone.length < 10) {
-            alert("Enter valid phone number");
-            return;
-        }
-        setOtpSent(true);
-        alert("OTP sent for Login");
-    };
-
-    const verifyOtp = () => {
-        if (otp.length === 6) {
-            alert("Login Successful!");
-        } else {
-            alert("Invalid OTP");
-        }
-    };
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [showPassword, setShowPassword] = useState(false);
+    const { loginWithRedirect } = useAuth0();
 
     return (
         <div className="signup-container">
@@ -31,7 +16,7 @@ export default function LoginOTPPage() {
                 <div>
                     <h1 className="black-color">Welcome Back!</h1>
                     <h4>
-                        <i>Login with your Phone No to continue</i>
+                        <i>Login with your Email to continue</i>
                     </h4>
                 </div>
 
@@ -47,59 +32,55 @@ export default function LoginOTPPage() {
 
                     <h2 className="black-color">Login</h2>
 
-                    {!otpSent ? (
-                        <>
-                            {/* Google Login */}
-                            <button className="social-login">
-                                <img
-                                    src="https://cdn-icons-png.flaticon.com/512/300/300221.png"
-                                    className="icon"
-                                    alt="Google Icon"
-                                />
-                                Continue with Google
-                            </button>
+                    <>
+                        {/* Email Login */}
+                        <button
+                            className="social-login"
+                            onClick={() => loginWithRedirect()}
+                        >
+                            <img
+                                src="https://cdn-icons-png.flaticon.com/512/732/732200.png"
+                                className="icon"
+                                alt="Email Icon"
+                            />
+                            Continue with Email
+                        </button>
 
-                            <div className="divider"><span></span> or <span></span></div>
+                        <div className="divider"><span></span> or <span></span></div>
 
-                            {/* Phone Number */}
-                            <div className="phone-input-box">
-                                <div className="country-box">
-                                    <img
-                                        src="https://flagcdn.com/w20/in.png"
-                                        alt="India Flag"
-                                        className="flag-icon"
-                                    />
-                                    <span className="country-code">+91</span>
-                                </div>
+                        {/* Email Input */}
+                        <input
+                            type="email"
+                            placeholder="Email"
+                            className="input"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                        />
 
-                                <input
-                                    type="text"
-                                    placeholder="Phone No"
-                                    className="phone-input"
-                                    value={phone}
-                                    onChange={(e) => setPhone(e.target.value)}
-                                />
-                            </div>
-
-                            <button className="signup-btn" onClick={sendOtp}>
-                                Send OTP
-                            </button>
-                        </>
-                    ) : (
-                        <>
+                        {/* Password Input */}
+                        <div className="password-box">
                             <input
-                                type="text"
-                                placeholder="Enter OTP"
+                                type={showPassword ? "text" : "password"}
+                                placeholder="Password"
                                 className="input"
-                                value={otp}
-                                onChange={(e) => setOtp(e.target.value)}
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
                             />
 
-                            <button className="signup-btn" onClick={verifyOtp}>
-                                Verify OTP
-                            </button>
-                        </>
-                    )}
+                            <label className="show-pass-label">
+                                <input
+                                    type="checkbox"
+                                    checked={showPassword}
+                                    onChange={() => setShowPassword(!showPassword)}
+                                />
+                                Show Password
+                            </label>
+                        </div>
+
+                        <button className="signup-btn">
+                            Login
+                        </button>
+                    </>
 
                     <p className="login-text">
                         Don’t have an account? <a href="/signup">Sign Up</a>

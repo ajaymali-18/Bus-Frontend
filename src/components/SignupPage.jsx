@@ -1,37 +1,51 @@
 import React, { useState } from "react";
 import "./SignupPage.css";
+import { useAuth0 } from "@auth0/auth0-react";
+
 import SignupGirl from "../assets/SignUpGirl.png";
 
 export default function SignupOTPPage() {
-    const [phone, setPhone] = useState("");
-    const [otpSent, setOtpSent] = useState(false);
-    const [otp, setOtp] = useState("");
 
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [showPassword, setShowPassword] = useState(false);
+    const [error, setError] = useState("");
 
-    // When user clicks Signup → Send OTP
-    const sendOtp = () => {
-        if (!email || password.length < 4 || phone.length < 10) {
-            alert("Please fill all fields correctly");
+    const { loginWithRedirect } = useAuth0();
+
+    // 🔥 FORM VALIDATION ONLY
+    const handleSignup = () => {
+        setError("");
+
+        // Email validation
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(email)) {
+            setError("Please enter a valid email address.");
             return;
         }
 
-        setOtpSent(true);
-        alert("OTP sent to your phone number");
-    };
-
-    const verifyOtp = () => {
-        if (otp.length === 6) {
-            alert("OTP Verified! Signup Successful");
-        } else {
-            alert("Invalid OTP");
+        // Password validations
+        if (password.length < 6) {
+            setError("Password must be at least 6 characters.");
+            return;
         }
+
+        if (!/[A-Z]/.test(password)) {
+            setError("Password must contain at least 1 uppercase letter.");
+            return;
+        }
+
+        if (!/[0-9]/.test(password)) {
+            setError("Password must contain at least 1 number.");
+            return;
+        }
+
+        alert("Signup Successful!");
     };
 
     return (
         <div className="signup-container">
+
             {/* LEFT SIDE */}
             <div className="left-side">
                 <div>
@@ -53,97 +67,68 @@ export default function SignupOTPPage() {
 
                     <h2 className="black-color">Create Account</h2>
 
-                    {!otpSent ? (
-                        <>
-                            {/* Google Login */}
-                            <button className="social-login">
-                                <img
-                                    src="https://cdn-icons-png.flaticon.com/512/300/300221.png"
-                                    className="icon"
-                                    alt="Google Icon"
-                                />
-                                Continue with Google
-                            </button>
+                    {/* Email Login */}
+                    <button
+                        className="social-login"
+                        onClick={() => loginWithRedirect({ connection: "google-oauth2" })}
+                    >
+                        <img
+                            src="https://cdn-icons-png.flaticon.com/512/732/732200.png"
+                            className="icon"
+                            alt="Email Icon"
+                        />
+                        Continue with Email
+                    </button>
 
-                            <div className="divider"><span></span> or <span></span></div>
+                    <div className="divider"><span></span> or <span></span></div>
 
-                            {/* Email Input */}
+                    {/* Email Input */}
+                    <input
+                        type="email"
+                        placeholder="Email"
+                        className="input"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                    />
+
+                    {/* Password Input */}
+                    <div className="password-box">
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Password"
+                            className="input"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                        />
+
+                        <label className="show-pass-label">
                             <input
-                                type="email"
-                                placeholder="Email"
-                                className="input"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
+                                type="checkbox"
+                                checked={showPassword}
+                                onChange={() => setShowPassword(!showPassword)}
                             />
+                            Show Password
+                        </label>
+                    </div>
 
-                            {/* Password Input */}
-                            <div className="password-box">
-                                <input
-                                    type={showPassword ? "text" : "password"}
-                                    placeholder="Password"
-                                    className="input"
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                />
-
-                                <label className="show-pass-label">
-                                    <input
-                                        type="checkbox"
-                                        checked={showPassword}
-                                        onChange={() => setShowPassword(!showPassword)}
-                                    />
-                                    Show Password
-                                </label>
-                            </div>
-
-                            {/* Phone Number Input */}
-                            <div className="phone-input-box">
-                                <div className="country-box">
-                                    <img
-                                        src="https://flagcdn.com/w20/in.png"
-                                        alt="India Flag"
-                                        className="flag-icon"
-                                    />
-                                    <span className="country-code">+91</span>
-                                </div>
-
-                                <input
-                                    type="text"
-                                    placeholder="Phone No"
-                                    className="phone-input"
-                                    value={phone}
-                                    onChange={(e) => setPhone(e.target.value)}
-                                />
-                            </div>
-
-                            {/* SIGNUP BUTTON (OTP Trigger) */}
-                            <button className="signup-btn" onClick={sendOtp}>
-                                Sign Up
-                            </button>
-                        </>
-                    ) : (
-                        <>
-                            {/* OTP Input */}
-                            <input
-                                type="text"
-                                placeholder="Enter OTP"
-                                className="input"
-                                value={otp}
-                                onChange={(e) => setOtp(e.target.value)}
-                            />
-
-                            {/* Verify Button */}
-                            <button className="signup-btn" onClick={verifyOtp}>
-                                Verify OTP
-                            </button>
-                        </>
+                    {/* ERROR MESSAGE */}
+                    {error && (
+                        <p style={{ color: "red", fontSize: "14px", marginTop: "10px" }}>
+                            {error}
+                        </p>
                     )}
 
+                    {/* SIGNUP BUTTON */}
+                    <button className="signup-btn" onClick={handleSignup}>
+                        Sign Up
+                    </button>
+
                     <p className="login-text">
-                        Already have an account? <a href="#">Sign in</a>
+                        Already have an account? <a href="/login">Log in</a>
                     </p>
                 </div>
             </div>
         </div>
     );
 }
+ 
