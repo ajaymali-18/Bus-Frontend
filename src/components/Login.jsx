@@ -9,12 +9,15 @@ export default function LoginOTPPage() {
     const [showPassword, setShowPassword] = useState(false);
     const { loginWithRedirect } = useAuth0();
 
-    // 🔥 Call Backend Login API
+    //  Call Backend Login API
     const handleLogin = async () => {
         if (!email || !password) {
             alert("Please enter email and password");
             return;
         }
+        // Temp code
+        console.log("API URL ->", import.meta.env.VITE_API_URL);
+        console.log(import.meta.env);
 
         try {
             // const response = await fetch("http://localhost:8080/auth/login", {
@@ -110,7 +113,7 @@ export default function LoginOTPPage() {
                             </label>
                         </div>
 
-                        {/* 🔥 Login Button */}
+                        {/*  Login Button */}
                         <button className="signup-btn" onClick={handleLogin}>
                             Login
                         </button>
