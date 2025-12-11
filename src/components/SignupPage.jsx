@@ -13,7 +13,7 @@ export default function SignupOTPPage() {
 
     const { loginWithRedirect } = useAuth0();
 
-    // 🔥 FORM VALIDATION ONLY
+    // 🔥 FORM VALIDATION + BACKEND CALL
     const handleSignup = async () => {
         setError("");
 
@@ -40,12 +40,9 @@ export default function SignupOTPPage() {
             return;
         }
 
-        alert("Signup Successful!");
-
         //  SEND DATA TO BACKEND
         try {
             const response = await fetch(`${import.meta.env.VITE_API_URL}auth/signup`, {
-            
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -57,15 +54,22 @@ export default function SignupOTPPage() {
             });
 
             const message = await response.text();
-            alert(message); // Temporary success message
+
+            if (response.ok) {
+                // ✅ only show success when backend is happy
+                alert(message || "Signup Successful!");
+                // optional: clear form or redirect
+                setEmail("");
+                setPassword("");
+            } else {
+                // ❌ show backend error (e.g. "User already present")
+                setError(message || "Signup failed. Try again.");
+            }
 
         } catch (error) {
             console.error(error);
-            alert("Signup failed. Try again later!");
+            setError("Signup failed. Try again later!");
         }
-
-
-
     };
 
     return (
